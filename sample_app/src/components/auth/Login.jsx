@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -48,7 +47,7 @@ const Login = () => {
 
         {/* Signup Link - Centered */}
         <div className="text-center mt-4">
-          <span className="text-gray-600">Don't have an account? </span>
+          <span className="text-gray-600">Dont have an account? </span>
           <Link
             to="/auth/signup"
             className="text-blue-600 font-medium hover:underline"
