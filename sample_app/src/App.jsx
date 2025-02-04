@@ -3,10 +3,10 @@ import AuthPage from "./pages/AuthPage";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 import ForgotPassword from "./components/auth/ForgotPassword";
-import DashPage from "./pages/DashPage";
-import ProfileDashboard from "./components/dashboard/ProfileDashboard";
-import HelpDashboard from "./components/dashboard/HelpDashboard";
-import LogisticDashboard from "./components/dashboard/LogisticDashboard";
+import LogisticPage from "./pages/logisticPage";
+import ProfileDashboard from "./components/logistic_dashboard/ProfileDashboard";
+import HelpDashboard from "./components/logistic_dashboard/HelpDashboard";
+import LogisticDashboard from "./components/logistic_dashboard/LogisticDashboard";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
 
-        <Route path="/dashboard" element={<DashPage />}>
+        <Route path="/dashboard" element={<LogisticPage />}>
           <Route path="logistic" element={<LogisticDashboard />} />
           <Route path="profile" element={<ProfileDashboard />} />
           <Route path="help" element={<HelpDashboard />} />
