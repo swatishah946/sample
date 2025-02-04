@@ -12,7 +12,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard/logistic" />} />
+        <Route path="/" element={<Navigate to="/logidashboard/logistic" />} />
 
         <Route path="/auth" element={<AuthPage />}>
           <Route path="login" element={<Login />} />
@@ -20,7 +20,7 @@ function App() {
           <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
 
-        <Route path="/dashboard" element={<LogisticPage />}>
+        <Route path="/logidashboard" element={<LogisticPage />}>
           <Route path="logistic" element={<LogisticDashboard />} />
           <Route path="profile" element={<ProfileDashboard />} />
           <Route path="help" element={<HelpDashboard />} />
