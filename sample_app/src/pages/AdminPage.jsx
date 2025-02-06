@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 
-const DashPage = () => {
+const AdminPage = () => {
   return (
     <div className="flex h-screen">
       {/* Main Content */}
@@ -30,4 +30,4 @@ const DashPage = () => {
   );
 };
 
-export default DashPage;
+export default AdminPage;

@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import DashPage from "./pages/DashPage"; // Import DashPage here
 import LogisticPage from "./pages/logisticPage";
-
+import AdminPage from "./pages/AdminPage";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 import ForgotPassword from "./components/auth/ForgotPassword";
@@ -21,7 +21,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/admin_dashboard" />} />
+        <Route path="/" element={<Navigate to="/auth/login" />} />
 
         {/* Authentication Pages */}
 
@@ -41,14 +41,19 @@ function App() {
         </Route>
 
 
-        <Route path="/logidashboard" element={<LogisticPage />}>
+        <Route path="/logidashboard" element={<ProtectedRoute />}>
+        <Route path="" element={<LogisticPage />}>
           <Route path="logistic" element={<LogisticDashboard />} />
           <Route path="logiprofile" element={<LogiProfileDashboard />} />
           <Route path="logihelp" element={<LogiHelpDashboard />} />
         </Route>
+        </Route>
 
-        <Route path="/admin_dashboard" element={<AdminDashboard/>} />
-
+        <Route path="/admin_dashboard" element={<ProtectedRoute />}>
+        {/* <Route path="" element={<AdminPage/>}> */}
+        <Route path="admin" element={<AdminDashboard/>} />
+        </Route>
+      
       </Routes>
     </BrowserRouter>
   );
