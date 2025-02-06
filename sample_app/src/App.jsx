@@ -7,7 +7,7 @@ import DashPage from "./pages/DashPage";
 import MSMEDashboard from "./components/dashboard/MSMEDashboard";
 import ProfileDashboard from "./components/dashboard/ProfileDashboard";
 import HelpDashboard from "./components/dashboard/HelpDashboard";
-import ProtectedRoute from "./components/auth/ProtectedRoute"; // Import ProtectedRoute
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
   return (
@@ -22,15 +22,17 @@ function App() {
           <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
 
-        {/* Protected Dashboard Routes */}
+        {/* Protected Routes */}
         <Route path="/dashboard" element={<ProtectedRoute />}>
-          <Route path="msme" element={<MSMEDashboard />} />
-          <Route path="profile" element={<ProfileDashboard />} />
-          <Route path="help" element={<HelpDashboard />} />
+          <Route path="" element={<DashPage />}>
+            <Route path="msme" element={<MSMEDashboard />} />
+            <Route path="profile" element={<ProfileDashboard />} />
+            <Route path="help" element={<HelpDashboard />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
   );
 }
 
-export default App;
+export default App;
