@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { signupUser } from "../api/auth";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -9,19 +10,28 @@ const SignUp = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
+
     setError("");
+    const userData = { email, password, role };
 
-    // Simulating sign-up (replace with actual API call)
-    localStorage.setItem("newUser", JSON.stringify({ email, role }));
-
-    // Redirect to Login Page
-    navigate("/auth/login");
+    try {
+      const response = await signupUser(userData);
+      if (response.success) {
+        alert("Signup successful!");
+        navigate("/auth/login");
+      } else {
+        setError(response.message || "Signup failed. Please try again.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred.");
+    }
   };
 
   return (

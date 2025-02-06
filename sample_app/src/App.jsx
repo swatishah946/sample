@@ -9,7 +9,7 @@ import ForgotPassword from "./components/auth/ForgotPassword";
 import MSMEDashboard from "./components/dashboard/MSMEDashboard";
 import ProfileDashboard from "./components/dashboard/ProfileDashboard";
 import HelpDashboard from "./components/dashboard/HelpDashboard";
-import ProtectedRoute from "./components/auth/ProtectedRoute"; // Import ProtectedRoute
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 import LogiProfileDashboard from "./components/logistic_dashboard/ProfileDashboard";
 import LogiHelpDashboard from "./components/logistic_dashboard/HelpDashboard";
@@ -31,7 +31,7 @@ function App() {
           <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
 
-        {/* Protected Dashboard Routes */}
+        {/* Protected Routes */}
         <Route path="/dashboard" element={<ProtectedRoute />}>
           <Route path="" element={<DashPage />}>
             <Route path="msme" element={<MSMEDashboard />} />
