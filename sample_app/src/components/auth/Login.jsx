@@ -1,8 +1,33 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
 
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../api/auth";
 const Login = () => {
   const [role, setRole] = useState("MSME"); // Default role selection
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      alert("Please enter email and password.");
+      return;
+    }
+
+    // Simulating authentication (replace with actual API call)
+    localStorage.setItem("token", "sampleAuthToken");
+    localStorage.setItem("role", role);
+
+    // Redirect user based on role
+    if (role === "MSME") {
+      navigate("/dashboard/msme");
+    } else if (role === "Provider") {
+      navigate("/dashboard/provider");
+    } else {
+      navigate("/dashboard/admin");
+    }
+  };
 
   return (
     <div className="auth-card">
@@ -12,7 +37,7 @@ const Login = () => {
         </h2>
       </div>
       <div className="auth-card-body">
-        <form>
+        <form onSubmit={handleLogin}>
           <div className="space-y-4">
             <div>
               <label className="form-label">Select Role</label>
@@ -34,6 +59,8 @@ const Login = () => {
                 type="email"
                 className="form-input"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
@@ -44,34 +71,27 @@ const Login = () => {
                 type="password"
                 className="form-input"
                 placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
 
-            {/* Forgot Password - Positioned to Top Right */}
             <div className="flex justify-end mt-2">
-              <Link
-                to="/auth/forgot-password"
-                className="text-blue-600 text-sm hover:underline"
-              >
+              <Link to="/auth/forgot-password" className="text-blue-600 text-sm hover:underline">
                 Forgot password?
               </Link>
             </div>
 
-            {/* Login Button */}
             <button type="submit" className="btn-primary mt-4 w-full">
               Login
             </button>
           </div>
         </form>
 
-        {/* Signup Link - Centered */}
         <div className="text-center mt-4">
           <span className="text-gray-600">Don't have an account? </span>
-          <Link
-            to="/auth/signup"
-            className="text-blue-600 font-medium hover:underline"
-          >
+          <Link to="/auth/signup" className="text-blue-600 font-medium hover:underline">
             Sign up here
           </Link>
         </div>
