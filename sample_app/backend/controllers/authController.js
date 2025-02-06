@@ -1,57 +1,54 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const User = require("../models/User");
 
 dotenv.config();
-const router = express.Router();
 
-// User Login Route
-router.post("/login", async (req, res) => {
-  const { email, password, role } = req.body;
-
-  try {
-    const user = await User.findOne({ email, role });
-
-    if (!user) {
-      return res.status(400).json({ error: "Invalid credentials" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: "Invalid credentials" });
-    }
-
-    // Generate JWT Token
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-    res.json({ token, role: user.role });
-  } catch (err) {
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// User Registration Route
-router.post("/signup", async (req, res) => {
-  const { email, password, role } = req.body;
+// Signup Controller
+exports.signup = async (req, res) => {
+  const { role, email, password } = req.body;
 
   try {
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({ error: "User already exists" });
-    }
+    let user = await User.findOne({ email });
+    if (user) return res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({ email, password: hashedPassword, role });
-    await newUser.save();
+    user = await User.create({ role, email, password: hashedPassword });
 
     res.status(201).json({ message: "User registered successfully" });
-  } catch (err) {
-    res.status(500).json({ error: "Server error" });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
   }
-});
+};
 
-module.exports = router;
+// Login Controller
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+  
+    res.status(200).json({
+      success: true,
+      token,
+      role: user.role,
+      message: "Login successful"
+    });
+    
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};

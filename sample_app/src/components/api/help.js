@@ -1,41 +1,55 @@
-const BASE_URL = "http://localhost:5173/api/help"; // Change if deployed
+import axios from "axios";
 
-// Fetch FAQs
+const API_BASE_URL = "http://localhost:5000/api/help"; // Ensure this matches your backend
+
+// ✅ Fetch FAQs
 export const getFAQs = async () => {
-    try {
-        const response = await fetch(`${BASE_URL}/faqs`);
-        return await response.json();
-    } catch (error) {
-        console.error("Error fetching FAQs:", error);
-        return [];
-    }
+  try {
+    const response = await axios.get(`${API_BASE_URL}/faqs`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error fetching FAQs:", error.response?.data || error);
+    return [];
+  }
 };
 
-// Fetch Contact Info
+// ✅ Fetch Contact Info
 export const getContactInfo = async () => {
-    try {
-        const response = await fetch(`${BASE_URL}/contact`);
-        return await response.json();
-    } catch (error) {
-        console.error("Error fetching contact info:", error);
-        return null;
-    }
+  try {
+    const response = await axios.get(`${API_BASE_URL}/contact`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error fetching contact info:", error.response?.data || error);
+    return {};
+  }
 };
 
-// Send Message
+// ✅ Send Message
 export const sendMessage = async (userId, message) => {
-    try {
-        const response = await fetch(`${BASE_URL}/send-message`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId, message }),
-        });
-
-        return await response.json();
-    } catch (error) {
-        console.error("Error sending message:", error);
-        return { success: false };
-    }
+  try {
+    console.log("🔹 API Request: Sending message...");
+    const response = await axios.post(
+      `${API_BASE_URL}/send-message`,
+      { message },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("✅ API Response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error in sendMessage:", error.response?.data || error);
+    return { success: false, error: error.response?.data || "An error occurred" };
+  }
 };

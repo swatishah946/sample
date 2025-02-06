@@ -1,31 +1,44 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../api/auth";
+
 const Login = () => {
-  const [role, setRole] = useState("MSME"); // Default role selection
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("MSME"); // Default role selection
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+
     if (!email || !password) {
-      alert("Please enter email and password.");
+      setError("Please enter email and password.");
       return;
     }
 
-    // Simulating authentication (replace with actual API call)
-    localStorage.setItem("token", "sampleAuthToken");
-    localStorage.setItem("role", role);
+    setError("");
+    const userData = { email, password, role };
 
-    // Redirect user based on role
-    if (role === "MSME") {
-      navigate("/dashboard/msme");
-    } else if (role === "Provider") {
-      navigate("/dashboard/provider");
-    } else {
-      navigate("/dashboard/admin");
+    try {
+      const response = await loginUser(userData);
+      if (response.success) {
+        localStorage.setItem("token", response.token);
+        localStorage.setItem("role", role);
+
+        // Redirect user based on role
+        if (role === "MSME") {
+          navigate("/dashboard/msme");
+        } else if (role === "Provider") {
+          navigate("/logidashboard/logistic");
+        } else {
+          navigate("/admin_dashboard");
+        }
+      } else {
+        setError(response.message || "Login failed. Please try again.");
+      }
+    } catch (err) {
+      setError("An unexpected error occurred.");
     }
   };
 
@@ -76,6 +89,8 @@ const Login = () => {
                 required
               />
             </div>
+
+            {error && <p className="input-error">{error}</p>}
 
             <div className="flex justify-end mt-2">
               <Link to="/auth/forgot-password" className="text-blue-600 text-sm hover:underline">

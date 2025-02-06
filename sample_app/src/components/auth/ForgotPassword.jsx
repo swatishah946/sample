@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +11,7 @@ const ForgotPassword = () => {
       "If an account exists with this email, a reset link will be sent."
     );
   };
-
+ 
   return (
     <div className="auth-card">
       <div className="auth-card-header">
