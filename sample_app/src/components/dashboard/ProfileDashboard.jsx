@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaUser, FaEnvelope, FaPhone, FaBuilding, FaEdit } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaBuilding, FaEdit, FaSignOutAlt } from "react-icons/fa";
 
 const ProfileDashboard = () => {
   const [user, setUser] = useState({
@@ -19,10 +19,14 @@ const ProfileDashboard = () => {
     setIsEditing(false);
   };
 
+  const handleLogout = () => {
+    alert("Logging out..."); // Replace with actual logout logic
+  };
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-xl rounded-lg text-center">
       <h2 className="text-3xl font-bold mb-6">👤 Profile</h2>
-      
+
       <div className="space-y-4 text-left">
         <div className="flex items-center space-x-3 text-lg">
           <FaUser className="text-blue-500" />
@@ -42,9 +46,15 @@ const ProfileDashboard = () => {
         </div>
       </div>
 
-      <button onClick={handleEdit} className="mt-6 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center">
-        <FaEdit className="mr-2" /> Edit Profile
-      </button>
+      <div className="flex justify-center space-x-4 mt-6">
+        <button onClick={handleEdit} className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 flex items-center">
+          <FaEdit className="mr-2" /> Edit Profile
+        </button>
+
+        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center">
+          <FaSignOutAlt className="mr-2" /> Logout
+        </button>
+      </div>
 
       {isEditing && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
