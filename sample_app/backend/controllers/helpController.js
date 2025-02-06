@@ -22,20 +22,4 @@ const faqs = [
   };
   
   // Send Message
-  exports.sendMessage = async (req, res) => {
-    try {
-      const { userId, message } = req.body;
-  
-      if (!message || !userId) {
-        return res.status(400).json({ success: false, error: "User ID and message are required." });
-      }
-  
-      // Simulating database storage (replace with actual DB logic)
-      console.log(`Message received from user ${userId}: ${message}`);
-  
-      return res.json({ success: true, message: "Your message has been sent to support!" });
-    } catch (error) {
-      return res.status(500).json({ success: false, error: "Internal Server Error" });
-    }
-  };
-  
+ 
