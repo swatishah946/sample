@@ -9,13 +9,13 @@ const DashPage = () => {
         <header className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-800">EaseLogi</h1>
           <div className="flex space-x-4">
-            <Link to="/logidashboard/logistic" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <Link to="/dashboard/admin" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
               Home
             </Link>
-            <Link to="/logidashboard/logiprofile" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <Link to="/dashboard/profile" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
               Profile
             </Link>
-            <Link to="/logidashboard/logihelp" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <Link to="/dashboard/help" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
               Help
             </Link>
           </div>
