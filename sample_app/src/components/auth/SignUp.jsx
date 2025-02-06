@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -6,6 +7,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("MSME"); // Default role selection
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,8 +16,12 @@ const SignUp = () => {
       return;
     }
     setError("");
-    // Add your signup logic here (e.g., API call)
-    console.log("Form submitted with:", { email, password, role });
+
+    // Simulating sign-up (replace with actual API call)
+    localStorage.setItem("newUser", JSON.stringify({ email, role }));
+
+    // Redirect to Login Page
+    navigate("/auth/login");
   };
 
   return (
@@ -27,11 +33,8 @@ const SignUp = () => {
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label className="form-label" htmlFor="role">
-                Select Role
-              </label>
+              <label className="form-label">Select Role</label>
               <select
-                id="role"
                 className="form-input"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
@@ -44,13 +47,10 @@ const SignUp = () => {
             </div>
 
             <div>
-              <label className="form-label" htmlFor="email">
-                Email
-              </label>
+              <label className="form-label">Email</label>
               <input
-                className="form-input"
-                id="email"
                 type="email"
+                className="form-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -58,32 +58,29 @@ const SignUp = () => {
             </div>
 
             <div>
-              <label className="form-label" htmlFor="password">
-                Password
-              </label>
+              <label className="form-label">Password</label>
               <input
-                className="form-input"
-                id="password"
                 type="password"
+                className="form-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
+
             <div>
-              <label className="form-label" htmlFor="confirmPassword">
-                Confirm Password
-              </label>
+              <label className="form-label">Confirm Password</label>
               <input
-                className="form-input"
-                id="confirmPassword"
                 type="password"
+                className="form-input"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
               />
             </div>
+
             {error && <p className="input-error">{error}</p>}
+
             <button type="submit" className="btn-primary">
               Sign Up
             </button>

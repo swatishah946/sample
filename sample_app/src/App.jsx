@@ -9,6 +9,7 @@ import ForgotPassword from "./components/auth/ForgotPassword";
 import MSMEDashboard from "./components/dashboard/MSMEDashboard";
 import ProfileDashboard from "./components/dashboard/ProfileDashboard";
 import HelpDashboard from "./components/dashboard/HelpDashboard";
+import ProtectedRoute from "./components/auth/ProtectedRoute"; // Import ProtectedRoute
 
 import LogiProfileDashboard from "./components/logistic_dashboard/ProfileDashboard";
 import LogiHelpDashboard from "./components/logistic_dashboard/HelpDashboard";
@@ -20,24 +21,25 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Default route to login */}
-        {/* <Route path="/" element={<Navigate to="/logidashboard/logistic" />} /> */}
-        {/* <Route path="/" element={<Navigate to="/dashboard/msme" />} /> */}
         <Route path="/" element={<Navigate to="/admin_dashboard" />} />
+
         {/* Authentication Pages */}
 
         <Route path="/auth" element={<AuthPage />}>
-          <Route path="login" element={<Login />} />
+          <Route index path="login" element={<Login />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
         </Route>
 
-        {/* Dashboard Pages */}
-        <Route path="/dashboard" element={<DashPage />}>
-          <Route path="msme" element={<MSMEDashboard />} />
-          <Route path="profile" element={<ProfileDashboard />} />
-          <Route path="help" element={<HelpDashboard />} />
+        {/* Protected Dashboard Routes */}
+        <Route path="/dashboard" element={<ProtectedRoute />}>
+          <Route path="" element={<DashPage />}>
+            <Route path="msme" element={<MSMEDashboard />} />
+            <Route path="profile" element={<ProfileDashboard />} />
+            <Route path="help" element={<HelpDashboard />} />
+          </Route>
         </Route>
+
 
         <Route path="/logidashboard" element={<LogisticPage />}>
           <Route path="logistic" element={<LogisticDashboard />} />
