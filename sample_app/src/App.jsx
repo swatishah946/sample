@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import DashPage from "./pages/DashPage"; // Import DashPage here
 import LogisticPage from "./pages/logisticPage";
-import AdminPage from "./pages/AdminPage";
+// import AdminPage from "./pages/AdminPage";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 import ForgotPassword from "./components/auth/ForgotPassword";
