@@ -30,9 +30,9 @@ const Login = () => {
         if (role === "MSME") {
           navigate("/dashboard/msme");
         } else if (role === "Provider") {
-          navigate("/dashboard/provider");
+          navigate("/logidashboard/logistic");
         } else {
-          navigate("/dashboard/admin");
+          navigate("/admin_dashboard/admin");
         }
       } else {
         setError(response.message || "Login failed. Please try again.");
