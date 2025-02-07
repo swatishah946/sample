@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import OperationsControl from "./OperationsControl";
 import AnalyticsReports from "./AnalyticsReports";
 
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("operations");
 
@@ -11,7 +12,7 @@ const AdminDashboard = () => {
       {/* Top Navigation Tabs */}
       <div className="flex space-x-4 border-b border-[#2E5077] mb-4">
         <button
-          className={`px-5 py-2 rounded-lg transition duration-300 ${
+          className={`px-5 py-2 mb-1.5 rounded-lg transition duration-300 ${
             activeTab === "operations" 
               ? "bg-[#4DA1A9] text-white font-bold shadow-md" 
               : "text-[#2E5077] hover:bg-[#79D7BE] hover:text-white"
@@ -21,7 +22,7 @@ const AdminDashboard = () => {
           Operations Control
         </button>
         <button
-          className={`px-5 py-2 rounded-lg transition duration-300 ${
+          className={`px-5 py-2 mb-1.5 rounded-lg transition duration-300 ${
             activeTab === "analytics" 
               ? "bg-[#4DA1A9] text-white font-bold shadow-md" 
               : "text-[#2E5077] hover:bg-[#79D7BE] hover:text-white"
