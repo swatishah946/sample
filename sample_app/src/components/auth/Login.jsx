@@ -31,7 +31,6 @@ const Login = () => {
           navigate("/dashboard/msme");
         } else if (role === "Provider") {
           navigate("/logidashboard/logistic");
-          navigate("/logidashboard/logistic");
         } else {
           navigate("/admin_dashboard/admin");
         }
