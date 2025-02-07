@@ -1,7 +1,10 @@
 const Shipment = require('../models/Shipment');
+const AggregatedLoad = require('../models/AggregatedLoad');
 const LogisticsService = require('../services/LogisticsService');
-const NotificationService = require('../services/notificationService');
 
+/**
+ * Create a new shipment and check aggregation opportunities.
+ */
 exports.createShipment = async (req, res) => {
   try {
     if (!req.user) {
@@ -10,19 +13,16 @@ exports.createShipment = async (req, res) => {
 
     const shipment = new Shipment({
       ...req.body,
-      msmeId: req.user._id // Authentication required here
+      msmeId: req.user._id
     });
 
     await shipment.save();
 
-    // Check for aggregation opportunities
-    const pendingShipments = await Shipment.find({
-      status: 'pending',
-      aggregated: false
-    });
+    // Aggregation logic for pending shipments
+    const pendingShipments = await Shipment.find({ status: 'pending', aggregated: false });
 
     if (pendingShipments.length >= 3) {
-      await LogisticsService.aggregateShipments(pendingShipments);
+      await aggregateShipments(pendingShipments);
     }
 
     res.status(201).json(shipment);
@@ -31,12 +31,76 @@ exports.createShipment = async (req, res) => {
   }
 };
 
+/**
+ * Aggregates shipments based on common criteria and assigns providers.
+ */
+async function aggregateShipments(shipments) {
+  try {
+    const aggregationGroups = await Shipment.aggregate([
+      {
+        $match: {
+          status: 'pending',
+          aggregated: false
+        }
+      },
+      {
+        $group: {
+          _id: {
+            origin: "$origin.cityState",
+            destination: "$destination.cityState"
+          },
+          shipments: { $push: "$$ROOT" },
+          totalWeight: { $sum: "$totalWeight" },
+          totalVolume: { $sum: "$totalVolume" },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $match: {
+          count: { $gte: 3 }, // Minimum shipment count to form a group
+          totalWeight: { $lte: 5000 } // Example weight limit for efficiency
+        }
+      }
+    ]);
+
+    for (const group of aggregationGroups) {
+      const aggregatedLoad = new AggregatedLoad({
+        origin: group._id.origin,
+        destination: group._id.destination,
+        shipments: group.shipments.map(s => s._id),
+        totalWeight: group.totalWeight,
+        totalVolume: group.totalVolume,
+        count: group.count,
+        status: 'aggregated'
+      });
+
+      await aggregatedLoad.save();
+
+      // Update shipments as aggregated
+      await Shipment.updateMany(
+        { _id: { $in: group.shipments.map(s => s._id) } },
+        { $set: { aggregated: true } }
+      );
+
+      // Notify provider if available
+      const bestProvider = await LogisticsService.findBestProvider(aggregatedLoad);
+      if (bestProvider) {
+        aggregatedLoad.assignedProvider = bestProvider._id;
+        await aggregatedLoad.save();
+        NotificationService.notifyProvider(bestProvider, aggregatedLoad);
+      }
+    }
+  } catch (error) {
+    console.error("Error during aggregation:", error);
+  }
+}
+
 exports.getShipments = async (req, res) => {
   try {
     const shipments = await Shipment.find()
       .populate('aggregationGroup')
       .populate('matchedProvider');
-    
+
     res.json(shipments);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -45,34 +109,63 @@ exports.getShipments = async (req, res) => {
 
 exports.getShipmentTracking = async (req, res) => {
   try {
-    console.log("Request ID:", req.params.id);
-    const shipment = await Shipment.findById(req.params.id)
-      .populate('trackingUpdates');
+    const shipment = await Shipment.findById(req.params.id).populate('trackingUpdates');
 
     if (!shipment) {
-      console.log("Shipment not found!");
       return res.status(404).json({ message: 'Shipment not found' });
     }
 
     res.json(shipment.trackingUpdates);
   } catch (error) {
-    console.error("Error fetching tracking:", error);
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.aggregateShipments = async (req, res) => {
   try {
-    const pendingShipments = await Shipment.find({ status: 'pending' });
+    const aggregationCriteria = [
+      {
+        $match: {
+          status: 'pending',
+          aggregated: false
+        }
+      },
+      {
+        $group: {
+          _id: { origin: "$origin", destination: "$destination" },
+          totalWeight: { $sum: "$totalWeight" },
+          totalVolume: { $sum: "$totalVolume" },
+          shipmentIds: { $push: "$_id" },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $match: {
+          count: { $gte: 3 } // Aggregate only when there are 3 or more shipments
+        }
+      }
+    ];
 
-    if (pendingShipments.length === 0) {
-      return res.status(404).json({ message: "No pending shipments available for aggregation" });
+    const aggregatedLoads = await Shipment.aggregate(aggregationCriteria);
+
+    if (!aggregatedLoads.length) {
+      return res.status(200).json({ message: "No suitable shipments for aggregation" });
     }
 
-    const aggregatedLoads = await LogisticsService.aggregateShipments(pendingShipments);
-    res.json({ message: "Shipments aggregated successfully", aggregatedLoads });
+    for (const load of aggregatedLoads) {
+      // Update aggregated shipments in the database
+      await Shipment.updateMany(
+        { _id: { $in: load.shipmentIds } },
+        { $set: { aggregated: true, aggregationGroup: load._id } }
+      );
+    }
+
+    res.status(200).json({
+      message: "Aggregation successful",
+      data: aggregatedLoads
+    });
   } catch (error) {
-    console.error("Error in shipment aggregation:", error);
+    console.error("Aggregation Error:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -83,15 +176,11 @@ exports.getMatchedShipments = async (req, res) => {
       .populate('aggregationGroup')
       .populate('matchedProvider');
 
-    console.log("Matched Shipments:", shipments); // Debug log
-
     res.json(shipments);
   } catch (error) {
-    console.error("Error fetching matched shipments:", error);
     res.status(500).json({ error: error.message });
   }
 };
-
 
 exports.assignProviderToLoad = async (req, res) => {
   try {

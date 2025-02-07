@@ -4,15 +4,7 @@ const mongoose = require('mongoose');
 const shipmentSchema = new mongoose.Schema({
   msmeId: { type: mongoose.Schema.Types.ObjectId, ref: 'MSME', required: true },
 
-  // Contact Information
-  contactInfo: {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
-    companyName: { type: String, required: true }
-  },
-
+  
   // Origin Information
   origin: {
     companyName: { type: String, required: true },
