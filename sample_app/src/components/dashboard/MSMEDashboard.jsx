@@ -1,13 +1,21 @@
+
+
 import React, { useState } from "react";
 import { FaTruck, FaCheckCircle, FaClock } from "react-icons/fa";
+
 import Card from "../ui/Card";
 import CardContent from "../ui/CardContent";
 import Button from "../ui/Button";
 
 const MSMEDashboard = () => {
   const [showForm, setShowForm] = useState(false);
-  const [shipments, setShipments] = useState([]);
-  const [loadMatches, setLoadMatches] = useState([]);
+  const [shipments, setShipments] = useState([
+   
+  ]);
+
+  const [loadMatches, setLoadMatches] = useState([
+    
+  ]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,21 +34,22 @@ const MSMEDashboard = () => {
   };
 
   return (
-    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 min-h-screen">
+    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Active Shipments */}
       <div>
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">🚚 Active Shipments</h2>
-        <div className="max-h-96 overflow-y-auto space-y-4">
+        <h2 className="text-xl font-bold mb-4">🚚 Active Shipments</h2>
+        <div className="max-h-96 overflow-y-auto">
           {shipments.length === 0 ? (
-            <p className="text-gray-500 text-lg">No shipments available. Start by adding a new shipment.</p>
+            <p className="text-gray-500">No shipments</p>
           ) : (
             shipments.map((shipment) => (
-              <Card key={shipment.id} className="shadow-lg rounded-xl border border-gray-200 p-4 bg-white">
-                <CardContent className="flex justify-between items-center">
+              <Card key={shipment.id} className="mb-4 shadow-lg rounded-lg">
+                <CardContent className="flex justify-between items-center p-4">
                   <div>
-                    <div className="font-semibold text-lg text-gray-900">{shipment.id}</div>
+                    <div className="font-semibold text-lg">{shipment.id}</div>
                     <div className="text-gray-600">{shipment.from} → {shipment.to}</div>
-                    <div className="flex items-center space-x-2 text-gray-700 mt-1">
-                      {shipment.icon} <span className="text-sm">{shipment.status}</span>
+                    <div className="flex items-center space-x-2 text-gray-700">
+                      {shipment.icon} <span>{shipment.status}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -50,17 +59,18 @@ const MSMEDashboard = () => {
         </div>
       </div>
 
+      {/* Load Matching */}
       <div>
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">📦 Load Matching</h2>
-        <div className="max-h-96 overflow-y-auto space-y-4">
+        <h2 className="text-xl font-bold mb-4">📦 Load Matching</h2>
+        <div className="max-h-96 overflow-y-auto">
           {loadMatches.length === 0 ? (
-            <p className="text-gray-500 text-lg">No load matches found.</p>
+            <p className="text-gray-500">No load matches</p>
           ) : (
             loadMatches.map((match, index) => (
-              <Card key={index} className="shadow-md rounded-xl border border-gray-200 p-4 bg-white">
-                <CardContent>
-                  <div className="mb-2 text-lg font-semibold text-gray-800">Match Score: {match.matchScore}%</div>
-                  <div className="w-full bg-gray-300 rounded-full h-3 mb-3">
+              <Card key={index} className="mb-4 shadow-md rounded-lg">
+                <CardContent className="p-4">
+                  <div className="mb-2">Match Score: <span className="font-semibold text-lg">{match.matchScore}%</span></div>
+                  <div className="w-full bg-gray-200 rounded-full h-3 mb-3">
                     <div className="bg-green-500 h-3 rounded-full" style={{ width: `${match.matchScore}%` }}></div>
                   </div>
                   <div className="text-green-600 font-semibold">💰 Savings: ₹{match.savings.toLocaleString()}</div>
