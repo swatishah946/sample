@@ -10,12 +10,12 @@ import MSMEDashboard from "./components/dashboard/MSMEDashboard";
 import ProfileDashboard from "./components/dashboard/ProfileDashboard";
 import HelpDashboard from "./components/dashboard/HelpDashboard";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-
+import AdminProfileDashboard from "./components/admin_dashboard/ProfileDashboard";
 import LogiProfileDashboard from "./components/logistic_dashboard/ProfileDashboard";
 import LogiHelpDashboard from "./components/logistic_dashboard/HelpDashboard";
 import LogisticsDashboard from "./components/logistic_dashboard/LogisticDashboard";
 
-import AdminDashboard from "./components/admin_dashboard/AdminDashboard";
+ import AdminDashboard from "./components/admin_dashboard/AdminDashboard";
 
 function App() {
   return (
@@ -50,8 +50,10 @@ function App() {
         </Route>
 
         <Route path="/admin_dashboard" element={<ProtectedRoute />}>
-        {/* <Route path="" element={<AdminPage/>}> */}
-        <Route path="admin" element={<AdminDashboard/>} />
+         <Route path="" element={<AdminPage />} >
+           <Route path="admin" element={<AdminDashboard />} />
+           <Route path="adminprofile" element={<AdminProfileDashboard />} />
+         </Route>
         </Route>
       
       </Routes>
