@@ -23,9 +23,9 @@ exports.signup = async (req, res) => {
 };
 
 // Login Controller
-exports.login = async (req, res) => {
-  const { email, password } = req.body;
 
+exports.login = async (req, res) => {
+  const { email, password, role } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
